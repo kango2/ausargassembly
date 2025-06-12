@@ -27,7 +27,6 @@ FAILDIR="${TEMPDIR}/fail"
 PASSDIR="${TEMPDIR}/pass"
 mkdir -p "$FAILDIR" "$PASSDIR"
 
-module load slow5tools
 
 tar -xf "$FAILTAR" -C "$FAILDIR"
 tar -xf "$PASSTAR" -C "$PASSDIR"

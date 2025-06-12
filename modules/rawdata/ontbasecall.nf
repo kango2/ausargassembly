@@ -11,7 +11,24 @@ process ontbasecall {
 
     script:
     """
-    # Convert fast5 files to blow5 format using slow5tools
+    if [[ ${chemistry} == 'R9' ]]; then
+        MODEL="dna_r9.4.1_450bps_sup.cfg"  
+    elif [[ ${chemistry} == 'R10' ]]; then
+        MODEL="dna_r10.4.1_e8.2_400bps_5khz_sup.cfg"  
+    fi
+
+    export MODEL
+
+    OUTDIR=\${PWD}
+    export OUTDIR
+
+    OUTFILE="${sample}.${tech}.${runid}"
+    export OUTFILE
+
+    MERGED_SLOW5=${blow5}
+    export MERGED_SLOW5
+    
+    bash /g/data/xl04/ka6418/github/ausargassembly/bin/basecall.sh
     """
 
     stub:

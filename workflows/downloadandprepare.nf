@@ -1,13 +1,8 @@
 //add pacbio dry run, make download.sh scripts on test data and make config & run tests on Gadi
 //and then plug in the real scripts, make it compliant with versions
 //document,push,version and we are all set to go.
-
-params.ontmetadata = "/g/data/xl04/ka6418/ausargassembly/testdata/downloadandprepare/ontmetadata.csv"
-params.pbmetadata = "/g/data/xl04/ka6418/ausargassembly/testdata/downloadandprepare/pbmetadata.csv"
-params.dnaseqmetadata = "/g/data/xl04/ka6418/ausargassembly/testdata/downloadandprepare/dnaseqmetadata.csv"
-params.hicmetadata = "/g/data/xl04/ka6418/ausargassembly/testdata/downloadandprepare/hicmetadata.csv"
-params.bpadata = "/g/data/xl04/ka6418/ausargassembly/bpadata"
-params.chunks = 10
+//test download bpa and then polish the processes, add software versions. add hic and then we are golden.
+//sql queries need to be added. 
 
 include { bpadownload_ont; bpadownload_hic; bpadownload_pb } from '/g/data/xl04/ka6418/github/ausargassembly/modules/bpadownload/bpadownload.nf'
 include {fast52blow5} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/fast52blow5.nf'
@@ -44,7 +39,7 @@ workflow {
         // Trigger individual workflows based on inputs
         if (run_ont) {
             def ontfast5  = bpadownload_ont(ont_ch)
-            def ontblow5  = fast52blow5(ontfast5)[0]
+            def ontblow5  = fast52blow5(ontfast5)
             def ontfastq  = ontbasecall(ontblow5)
         }
 
@@ -62,8 +57,8 @@ workflow {
         }
 
         if (run_hic) {
-            def hicmetadata = bpadownload_hic(hic_ch)
+            //def hicmetadata = bpadownload_hic(hic_ch)
         }
 
- 
+        //sql query channels? 
 }

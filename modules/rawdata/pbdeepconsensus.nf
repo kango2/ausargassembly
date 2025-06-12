@@ -10,6 +10,8 @@ process pbindex {
     script:
 
     """  
+    pbindex ${subread} -j ${task.cpus}
+    touch indexdone.txt
     """
 
     stub :
@@ -26,13 +28,15 @@ process ccs {
     tuple val (sample), val (tech), val (runid), val (subread), val (chunk)
 
     output:
-    tuple val (sample), val (tech), val (runid), val (subread), val ("${chunk}.ccs.bam"), val (chunk)
+    tuple val (sample), val (tech), val (runid), val (subread), path ("${chunk}.ccs.bam"), val (chunk)
 
 
     script:
 
     """
-    
+
+    ccs --min-rq=0.88 -j ${task.cpus} --chunk="${chunk}"/"${params.chunks}" ${subread} "${chunk}.ccs.bam"
+
     """
 
     stub :
@@ -60,7 +64,8 @@ process actc {
     script:
 
     """
-    
+
+    actc -j ${task.cpus} ${subread} ${ccs} "${chunk}.subreads_to_ccs.bam"
     """
 
     stub:
@@ -77,14 +82,16 @@ process actc {
 process deepconsensus {
 
     input:
-    tuple val (sample), val (tech), val (runid), val (subread), val (subreads), val (ccs), val (chunk)
+    tuple val (sample), val (tech), val (runid), val (subread), val (subreads_to_ccs), val (ccs), val (chunk)
 
     output:
     tuple val (sample), val (tech), val (runid), path ("${chunk}.output.fastq")
 
     script:
     """
-    
+
+    deepconsensus run --subreads_to_ccs=${subreads_to_ccs} --ccs_bam=${ccs} --checkpoint="/g/data/xl04/ka6418/ausargassembly/deepconsensus/checkpoint" --cpus ${task.cpus} --output=${chunk}.output.fastq 
+
     """
 
 
@@ -112,7 +119,9 @@ process concatFastq {
 
     """
     
-    
+    cat ${fastqlist.join(' ')} > "${sample}.${tech}.${runid}.deepconsensus.fastq"
+    bgzip -@ ${task.cpus} "${sample}.${tech}.${runid}.deepconsensus.fastq"
+
     """
 
     stub:
@@ -136,6 +145,12 @@ process pacbioadaptertrim {
     script:
 
     """
+
+    cutadapt --cores ${task.cpus} --anywhere file:\${PACBIOADAPTERS} \
+    --error-rate 0.1 --overlap 25 --match-read-wildcards --revcomp --discard-trimmed \
+    --json "${sample}_${tech}_${runid}.cutadapt.json" \
+    -o "${sample}.${tech}.${runid}.deepconsensus.trimmed.fastq.gz" \
+    ${fastq}
     
     """
 

@@ -3,23 +3,23 @@
 process bpadownload_ont {
 
     input:
-    tuple val (sample), val (tech), val (runid), val (bpazip), val (chemistry), val (filename)
+    tuple val (sample), val (tech), val (runid), val (bpazip), val (chemistry), val (passfilename), val (failfilename)
 
     output:
-    tuple val (sample), val (tech), val (runid), val (chemistry), path("*.fast5")
+    tuple val (sample), val (tech), val (runid), val (chemistry), path("*pass*tar"), path("*fail*tar")
 
     script:
     """
 
-    #we will have pass and fail fast5, so download them
-    #process them into a single fast5 file
+    bash ${bpazip}
   
     """
 
     stub:
     """
 
-    touch "${sample}.${tech}.${runid}.fast5"
+    touch "${sample}.${tech}.${runid}.pass.fast5.tar"
+    touch "${sample}.${tech}.${runid}.fail.fast5.tar"
     
     """
 
@@ -39,7 +39,7 @@ process bpadownload_pb {
     script:
     """
 
-    #we will have a subreads bam directly
+    bash ${bpazip}
   
     """
 
