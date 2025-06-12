@@ -6,7 +6,7 @@ process fast52blow5 {
     tuple val (sample), val (tech), val (runid), val (chemistry), path (fast5)
 
     output:
-    tuple val (sample), val (tech), val (runid), path("*.blow5")
+    tuple val (sample), val (tech), val (runid),  val (chemistry), path("*.blow5")
 
     script:
     """

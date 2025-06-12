@@ -3,11 +3,11 @@ process ontbasecall {
     publishDir "${params.bpadata}/${sample}/${tech}/${runid}/fastx", pattern : "*.fastq.gz", mode: 'copy', overwrite: true
 
     input:
-    tuple val (sample), val (tech), val (runid), val (chemistry), path (blow5)
+    tuple val (sample), val (tech), val (runid), val (chemistry), val (blow5)
 
     output:
     tuple val (sample), val (tech), val (runid), path("*pass*fastq.gz")
-    tuple val (sample), val (tech), val (runid), path("*fail*fastq.gz")
+    path("*fail*fastq.gz")
 
     script:
     """
