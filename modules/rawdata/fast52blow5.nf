@@ -10,7 +10,7 @@ process fast52blow5 {
 
     script:
     """
-    bash /g/data/xl04/ka6418/github/ausargassembly/bin/tar2slow5.sh -f ${failfast5tar} -p ${passfast5tar} -t \${PBS_JOBFS} -o \${PWD} -n "${sample}.${tech}.${runid}.blow5"
+    bash tar2slow5.sh -f ${failfast5tar} -p ${passfast5tar} -t \${PBS_JOBFS} -o \${PWD} -n "${sample}.${tech}.${runid}.blow5"
     """
 
     stub:

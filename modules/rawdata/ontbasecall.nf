@@ -28,7 +28,7 @@ process ontbasecall {
     MERGED_SLOW5=${blow5}
     export MERGED_SLOW5
     
-    bash /g/data/xl04/ka6418/github/ausargassembly/bin/basecall.sh
+    bash basecall.sh
     """
 
     stub:
