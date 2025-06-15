@@ -12,9 +12,9 @@ process bpadownload_ont {
     """
 
     unzip ${bpazip}
-    mv \$(basename ${bpazip})/* ../
+    mv */* ./
     export CKAN_API_TOKEN="${params.apitoken}"
-    bash download.sh
+    bash download.sh -o 
   
     """
 
@@ -43,9 +43,9 @@ process bpadownload_pb {
     """
 
     unzip ${bpazip}
-    mv \$(basename ${bpazip})/* ../
+    mv */* ./
     export CKAN_API_TOKEN="${params.apitoken}"
-    bash download.sh
+    bash download.sh -o
   
     """
 
@@ -61,7 +61,7 @@ process bpadownload_pb {
 
 process bpadownload_hic {
 
-    publishDir "${params.bpadata}/${sample}/${tech}/${runid}/raw", pattern : "*.fastq.gz", mode: 'copy', overwrite: true
+    publishDir "${params.bpadata}/${sample}/${tech}/${runid}/raw", pattern : "*fastq.gz", mode: 'copy', overwrite: true
 
     input:
     tuple val (sample), val (tech), val (runid), val (bpazip), val (r1), val (r2)
@@ -73,9 +73,9 @@ process bpadownload_hic {
     """
 
     unzip ${bpazip}
-    mv \$(basename ${bpazip})/* ../
+    mv */* ./
     export CKAN_API_TOKEN="${params.apitoken}"
-    bash download.sh
+    bash download.sh -o
   
     """
 

@@ -135,6 +135,8 @@ process concatFastq {
 
 process pacbioadaptertrim {
 
+    publishDir "${params.bpadata}/${sample}/${tech}/${runid}/fastx", pattern : "*.fastq.gz", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val (tech), val (runid), val (fastq)
 

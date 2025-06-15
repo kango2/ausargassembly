@@ -57,7 +57,7 @@ workflow {
         }
 
         if (run_hic) {
-            //def hicmetadata = bpadownload_hic(hic_ch)
+            def hicmetadata = bpadownload_hic(hic_ch)
         }
 
         //sql query channels? 
