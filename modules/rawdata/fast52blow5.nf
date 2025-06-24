@@ -10,7 +10,7 @@ process fast52blow5 {
 
     script:
     """
-    bash tar2slow5.sh -f ${failfast5tar} -p ${passfast5tar} -t \${PBS_JOBFS} -o \${PWD} -n "${sample}.${tech}.${runid}.blow5"
+    bash tar2slow5.sh -f ${failfast5tar} -p ${passfast5tar} -t "/iointensive" -o \${PWD} -n "${sample}.${tech}.${runid}.blow5"
     """
 
     stub:

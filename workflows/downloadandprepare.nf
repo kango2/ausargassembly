@@ -60,5 +60,5 @@ workflow {
             def hicmetadata = bpadownload_hic(hic_ch)
         }
 
-        //sql query channels? 
+
 }

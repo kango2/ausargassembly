@@ -6,7 +6,7 @@ process bpadownload_ont {
     tuple val (sample), val (tech), val (runid), val (bpazip), val (chemistry), val (passfilename), val (failfilename)
 
     output:
-    tuple val (sample), val (tech), val (runid), val (chemistry), path("${passfilename}"), path("${failfilename}")
+    tuple val (sample), val (tech), val (runid), val (chemistry), path("*fast5*pass*"), path("*fast5*fail*")
 
     script:
     """
@@ -14,7 +14,7 @@ process bpadownload_ont {
     unzip ${bpazip}
     mv */* ./
     export CKAN_API_TOKEN="${params.apitoken}"
-    bash download.sh -o 
+    bash download.sh -o || true
   
     """
 
@@ -37,7 +37,7 @@ process bpadownload_pb {
     tuple val (sample), val (tech), val (runid), val (bpazip), val (filename)
 
     output:
-    tuple val (sample), val (tech), val (runid), path("${filename}")
+    tuple val (sample), val (tech), val (runid), path("*.subreads.bam")
 
     script:
     """
@@ -45,7 +45,7 @@ process bpadownload_pb {
     unzip ${bpazip}
     mv */* ./
     export CKAN_API_TOKEN="${params.apitoken}"
-    bash download.sh -o
+    bash download.sh -o || true
   
     """
 
@@ -67,7 +67,7 @@ process bpadownload_hic {
     tuple val (sample), val (tech), val (runid), val (bpazip), val (r1), val (r2)
 
     output:
-    tuple val (sample), val (tech), val (runid), path("*R1*fastq.gz"), path("*R2*fastq.gz")
+    tuple val (sample), val (tech), val (runid), path("${r1}"), path("${r2}")
 
     script:
     """
@@ -75,7 +75,7 @@ process bpadownload_hic {
     unzip ${bpazip}
     mv */* ./
     export CKAN_API_TOKEN="${params.apitoken}"
-    bash download.sh -o
+    bash download.sh -o || true
   
     """
 
