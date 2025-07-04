@@ -70,7 +70,7 @@ def process_fastq(input_fastq, sample, output_folder):
     # Write quality frequency data
     with open(quality_output_csv, "w", newline="") as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["Sample", "Read_Length", "QV", "Read_Numbers"])
+        csv_writer.writerow(["sample", "read_length", "qv", "read_numbers"])
         for bin_key, bin_data in bins.items():
             length_bin, qv_bin = bin_key
             frequency = bin_data["count"]
@@ -80,7 +80,7 @@ def process_fastq(input_fastq, sample, output_folder):
     # Write stats data
     with open(stats_output_csv, "w", newline="") as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["Sample", "Total_Bases", "Total_Reads", "Average_Read_Length", "N50", "N90", "L50", "L90", "Total_Ns"])
+        csv_writer.writerow(["sample", "total_bases", "total_reads", "average_read_length", "n50", "n90", "l50", "l90", "total_ns"])
         csv_writer.writerow([sample, total_bases, total_reads, average_read_length, n50, n90, l50, l90, total_ns])
 
 
