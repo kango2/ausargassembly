@@ -1,7 +1,6 @@
-
 process hifiasm {
 
-  publishDir "${params.outdir}", pattern : "*${sample}*", mode: 'copy', overwrite: true
+  publishDir "${params.analysisdir}/${sample}/hifiasm", pattern : "*${sample}*", mode: 'copy', overwrite: true
 
   input:
   tuple val(sample), val(meta)
@@ -11,37 +10,45 @@ process hifiasm {
   tuple val(sample), val(meta), path("*.gfa")
 
   script:
-    def pbArg  = meta.pb  ? "${meta.pb.join(' ')}"  : ""
-    def ontArg = meta.ont ? "--ul ${meta.ont.join(',')}"    : ""
-    
+    // Flatten PB files
+    def pbFiles = meta.pb*.file
+    def pbArg = pbFiles ? pbFiles.join(' ') : ""
+
+    // Flatten ONT files
+    def ontFiles = meta.ont*.file
+    def ontArg = ontFiles ? "--ul ${ontFiles.join(',')}" : ""
+
+    // Hi-C logic
     def hicMergeCmds = ""
     def hicArgs = ""
     def asmprefix = "${sample}"
 
-        if (meta.hic_r1 && meta.hic_r2 && meta.hic_r1.size() == meta.hic_r2.size()) {
+    def hicR1s = []
+    def hicR2s = []
 
-            asmprefix = "${sample}.hic"
-            def hicR1Merged = "${sample}.hic_r1.merged.fastq.gz"
-            def hicR2Merged = "${sample}.hic_r2.merged.fastq.gz"
-
-            if (meta.hic_r1.size() > 1) {
-
-                def r1s = meta.hic_r1.join(' ')
-                def r2s = meta.hic_r2.join(' ')
-
-                hicMergeCmds = """
-                echo "Merging Hi-C R1 for ${sample} (${meta.hic_r1.size()} files)"
-                cat ${r1s} > ${hicR1Merged}
-                echo "Merging Hi-C R2 for ${sample} (${meta.hic_r2.size()} files)"
-                cat ${r2s} > ${hicR2Merged}
-                """
-                hicArgs = "--h1 ${hicR1Merged} --h2 ${hicR2Merged}"
-            } else {
-                hicArgs = "--h1 ${meta.hic_r1.join(' ')} --h2 ${meta.hic_r2.join(' ')}"
-            }
-
-        
+    if (meta.hic && meta.hic.size() > 0) {
+        meta.hic.each { run ->
+          def (r1, r2) = run.file.tokenize(';')
+          hicR1s << r1
+          hicR2s << r2
         }
+
+        asmprefix = "${sample}.hic"
+
+        if (hicR1s.size() > 1) {
+          def hicR1Merged = "${sample}.hic_r1.merged.fastq.gz"
+          def hicR2Merged = "${sample}.hic_r2.merged.fastq.gz"
+          hicMergeCmds = """
+          echo "Merging Hi-C R1 for ${sample} (${hicR1s.size()} files)"
+          cat ${hicR1s.join(' ')} > ${hicR1Merged}
+          echo "Merging Hi-C R2 for ${sample} (${hicR2s.size()} files)"
+          cat ${hicR2s.join(' ')} > ${hicR2Merged}
+          """
+          hicArgs = "--h1 ${hicR1Merged} --h2 ${hicR2Merged}"
+        } else {
+          hicArgs = "--h1 ${hicR1s[0]} --h2 ${hicR2s[0]}"
+        }
+    }
 
     """
     ${hicMergeCmds}
@@ -50,50 +57,56 @@ process hifiasm {
         gfatools gfa2fa ${asmprefix}\${hap}.p_ctg.gfa > ${sample}\${hap}.p_ctg.fasta
     done
     """
-
-  stub:
-    def pbArg  = meta.pb  ? "${meta.pb.join(' ')}"  : ""
-    def ontArg = meta.ont ? "--ul ${meta.ont.join(',')}"    : ""
     
+  stub:
+
+      // Flatten PB files
+    def pbFiles = meta.pb*.file
+    def pbArg = pbFiles ? pbFiles.join(' ') : ""
+
+    // Flatten ONT files
+    def ontFiles = meta.ont*.file
+    def ontArg = ontFiles ? "--ul ${ontFiles.join(',')}" : ""
+
+    // Hi-C logic
     def hicMergeCmds = ""
     def hicArgs = ""
     def asmprefix = "${sample}"
 
-        if (meta.hic_r1 && meta.hic_r2 && meta.hic_r1.size() == meta.hic_r2.size()) {
+    def hicR1s = []
+    def hicR2s = []
 
-            asmprefix = "${sample}.hic"
-
-
-            if (meta.hic_r1.size() > 2) {
-                def hicR1Merged = "${sample}.hic_r1.merged.fastq.gz"
-                def hicR2Merged = "${sample}.hic_r2.merged.fastq.gz"
-                def r1s = meta.hic_r1.join(' ')
-                def r2s = meta.hic_r2.join(' ')
-
-                hicMergeCmds = """
-                echo "Merging Hi-C R1 for ${sample} (${meta.hic_r1.size()} files)"
-                cat ${r1s} > ${hicR1Merged} 
-                echo "Merging Hi-C R2 for ${sample} (${meta.hic_r2.size()} files)"
-                cat ${r2s} > ${hicR2Merged}
-                """
-                hicArgs = "--h1 ${hicR1Merged} --h2 ${hicR2Merged}"
-            } else {
-                hicArgs = "--h1 ${meta.hic_r1.join(' ')} --h2 ${meta.hic_r2.join(' ')}"
-            }
-
-        
+    if (meta.hic && meta.hic.size() > 0) {
+        meta.hic.each { run ->
+          def (r1, r2) = run.file.tokenize(';')
+          hicR1s << r1
+          hicR2s << r2
         }
 
-    """
-    ${hicMergeCmds}
-    echo hifiasm --telo-m CCCTAA -o ${sample} -t ${task.cpus} ${ontArg} ${hicArgs} ${pbArg}
-    for hap in "" ".hap1" ".hap2"; do
-        echo gfatools gfa2fa ${asmprefix}\${hap}.p_ctg.gfa 
-    done
+        asmprefix = "${sample}.hic"
 
-    touch ${sample}.p_ctg.fasta ${sample}.hap1.p_ctg.fasta ${sample}.hap2.p_ctg.fasta  
+        if (hicR1s.size() > 1) {
+          def hicR1Merged = "${sample}.hic_r1.merged.fastq.gz"
+          def hicR2Merged = "${sample}.hic_r2.merged.fastq.gz"
+          hicMergeCmds = """
+          echo "Merging Hi-C R1 for ${sample} (${hicR1s.size()} files)"
+          cat ${hicR1s.join(' ')} > ${hicR1Merged}
+          echo "Merging Hi-C R2 for ${sample} (${hicR2s.size()} files)"
+          cat ${hicR2s.join(' ')} > ${hicR2Merged}
+          """
+          hicArgs = "--h1 ${hicR1Merged} --h2 ${hicR2Merged}"
+        } else {
+          hicArgs = "--h1 ${hicR1s[0]} --h2 ${hicR2s[0]}"
+        }
+    }
+
+    """
+
+    echo hifiasm --telo-m CCCTAA -o ${sample} -t ${task.cpus} ${ontArg} ${hicArgs} ${pbArg} 
+    for hap in "" ".hap1" ".hap2"; do
+        echo gfatools gfa2fa ${asmprefix}\${hap}.p_ctg.gfa
+    done
+    touch ${sample}.p_ctg.fasta ${sample}.hap1.p_ctg.fasta ${sample}.hap2.p_ctg.fasta
     touch ${sample}.p_ctg.gfa ${sample}.hap1.gfa ${sample}.hap2.gfa
     """
 }
-
-

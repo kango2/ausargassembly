@@ -1,10 +1,14 @@
 process shortreadtrimming {
 
+    errorStrategy 'ignore'
+
+    publishDir "${params.rawdir}/${tech}/${runid}/fastx", pattern : "*trimmed.fastq.gz", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val (tech), val (runid), val (fastq)
 
     output:
-    tuple val (sample), val (tech), val (runid), path ("*R1.trimmed*fastq.gz"), path ("*R2.trimmed*fastq.gz")
+    tuple val (sample), val (tech), val (runid), path ("*R1.trimmed.fastq.gz"), path ("*R2.trimmed.fastq.gz")
 
     when:
     tech == 'illumina' && fastq && fastq.contains(";")

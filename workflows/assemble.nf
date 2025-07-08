@@ -1,106 +1,130 @@
+//stub file with illumina
+//params.samplesheet = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg.csv" 
+//stub file without illumina
+//params.samplesheet = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg-noillumina.csv"
+
+//real data
+params.samplesheet = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-8july.csv"
+params.analysisdir = "/g/data/xl04/genomeprojects"
+params.rawdir = "/g/data/xl04/bpadownload2025"
+
 include {hifiasm} from '/g/data/xl04/ka6418/github/ausargassembly/modules/assembly/hifiasm.nf'
-include {longreadstats} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/longreadstats.nf'
+include {shortreadtrimming} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/shortreadtrimming.nf'
 include {shortreadstats} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/shortreadstats.nf'
+include {kmerlongread; kmershortread} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/kmer.nf'
+include {longreadstats} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/longreadstats.nf'
 
-//params.samplesheet = "/g/data/xl04/ka6418/ausargassembly/devphase2/testcsv-assemblenf.csv"
-
-//Channel
-// .fromPath(params.samplesheet)
-//  .splitCsv(header:true)
-//  .map { row ->
-//    def meta = [
-//      ont     : row.ont_reads    ? row.ont_reads.tokenize(';')   : [],
-//      pb      : row.pb_reads     ? row.pb_reads.tokenize(';')    : [],
-//      hic_r1  : row.hic_r1       ? row.hic_r1.tokenize(';')      : [],
-//      hic_r2  : row.hic_r2       ? row.hic_r2.tokenize(';')      : [],
-//      illum_r1: row.illum_r1     ? row.illum_r1.tokenize(';')    : [],
-//      illum_r2: row.illum_r2     ? row.illum_r2.tokenize(';')    : []
-//    ]
-//    tuple(row.sample, meta)
-//  }
-//  .set { meta_ch }
-
-params.shortread = "/g/data/xl04/ka6418/ausargassembly/assemblydev/shortreadfiles.csv"
-params.longread = "/g/data/xl04/ka6418/ausargassembly/assemblydev/longreadfiles.csv"
+kmermodes = ['17','21','25']
 
 Channel
-    .fromPath(params.longread)
-    .splitCsv(header: true)
-    .map { row -> 
-        def sample = row.sample
-        def tech = row.tech
-        def runid = row.runid
-        def file = file(row.file)
-        return [sample, tech, runid, file]
-    }
-    .set { longreadch }
+  .fromPath(params.samplesheet)
+  .splitCsv(header: true)
+  .map { row ->
+    def sample = row.sample
+    def tech   = row.tech.toLowerCase()
+    def runid  = row.runid
+    def file   = row.file
+    tuple(sample, [tech: tech, entry: [runid: runid, file: file]])
+  }
+  .groupTuple()  // Groups all entries by sample
+  .map { sample, entries ->
+    def meta = [:]
 
-
-Channel
-    .fromPath(params.shortread)
-    .splitCsv(header: true)
-    .map { row -> 
-        def sample = row.sample
-        def tech = row.tech
-        def runid = row.runid
-        def r1 = file(row.r1file)
-        def r2 = file(row.r2file)
-        return [sample, tech, runid, r1, r2]
+    // Initialize all expected techs with empty lists
+    ['ont', 'pb', 'hic', 'illumina'].each { tech ->
+      meta[tech] = []
     }
-    .set { shortreadch }
+
+    // Fill in actual data
+    entries.each { it ->
+      def tech = it.tech
+      def entry = it.entry
+      meta[tech] << entry
+    }
+
+    tuple(sample, meta)
+  }
+  .set { meta_ch_temp }
+
 
 
 workflow {
-
-  longreadstats(longreadch)
-  shortreadstats(shortreadch)
-
-
-  // Process long reads: ONT and PB
-longreadch
-    .map { sample, tech, runid, f ->
-        def label = tech == "ONT" ? 'ont' :
-                    tech == "PB"  ? 'pb'  : null
-        [sample, label, f]
-    }
-    .filter { sample, label, f -> label != null }
-    .set { long_meta_ch }
-
-// Process short reads: Illumina and HiC
-shortreadch
-    .flatMap { sample, tech, runid, r1, r2 ->
-        def items = []
-        if (tech == "Illumina") {
-            items << [sample, 'illum_r1', r1]
-            items << [sample, 'illum_r2', r2]
-        } else if (tech == "HIC") {
-            items << [sample, 'hic_r1', r1]
-            items << [sample, 'hic_r2', r2]
+  
+    meta_ch_temp
+    .flatMap { sample, meta ->
+      meta.collectMany { tech, runs ->
+        runs.collect { run ->
+          tuple(sample, tech, run.runid, run.file)
         }
-        return items
+      }
     }
-    .set { short_meta_ch }
+    .set { flattened_meta_ch_temp }
 
-// Combine and group
-long_meta_ch
-    .mix(short_meta_ch)
+    flattened_meta_illumina_ch = flattened_meta_ch_temp.filter { sample, tech, runid, file ->
+    tech == 'illumina'
+    }
+
+    flattened_meta_other_ch = flattened_meta_ch_temp.filter { sample, tech, runid, file ->
+    tech != 'illumina'
+    }
+
+    trimmed_illumina_ch = shortreadtrimming(flattened_meta_illumina_ch).map { sample, tech, runid, r1, r2 ->
+          def joined = "${r1};${r2}"
+          tuple(sample, tech, runid, joined)
+        }
+
+
+    flattened_meta_ch_temp2 = flattened_meta_other_ch.mix(trimmed_illumina_ch)
+
+    meta_ch = flattened_meta_ch_temp2
+    .map { sample, tech, runid, file -> tuple(sample, [tech: tech, run: [runid: runid, file: file]]) }
     .groupTuple()
-    .map { sample, records ->
-        def meta = [
-            ont: [], pb: [], illum_r1: [], illum_r2: [], hic_r1: [], hic_r2: []
-        ]
-        for (def entry : records) {
-            def label = entry[0]
-            def val   = entry[1]
-            meta[label] << val
-        }
-        tuple(sample, meta)
+    .map { sample, items ->
+      def meta = ['ont': [], 'pb': [], 'hic': [], 'illumina': []]
+      items.each { entry ->
+        def tech = entry.tech
+        def run  = entry.run
+        meta[tech] << run
+      }
+      tuple(sample, meta)
     }
-    .set { meta_ch }
+    
+    meta_ch.flatMap { sample, meta ->
+      meta.collectMany { tech, runs ->
+        runs.collect { run ->
+          tuple(sample, tech, run.runid, run.file)
+        }
+      }
+    }
+    .set { flattened_meta_ch }
 
+    shortstatsch = shortreadstats(flattened_meta_ch)
+    longstatsch = longreadstats(flattened_meta_ch)
 
-meta_ch.view()
+    meta_ch
+    .flatMap { sample, meta ->
+      meta.collect { tech, runs ->
+        def files = runs*.file 
+        tuple(sample, tech, files)
+      }
+    }
+    .set { sample_tech_files_ch }
+
+    kmerlongreadch = kmerlongread(sample_tech_files_ch,kmermodes)
+    kmershortreadch = kmershortread(sample_tech_files_ch,kmermodes)
+
+    hifiasmch = hifiasm(meta_ch)[0]
+
+    hifiasmch
+    .map { sample, meta_raw, primary, hap1, hap2 ->
+      def meta_asm = [
+      primary: primary,
+        hap1: hap1,
+        hap2: hap2
+      ]
+      tuple(sample, meta_raw, meta_asm)
+    }
+    .set { sample_meta_asm_ch }
 
 
 }
-

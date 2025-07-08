@@ -1,5 +1,7 @@
 process longreadstats {
 
+    publishDir "${params.rawdir}/${tech}/${runid}/fastx", pattern : "*.csv", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val (tech), val (runid), val (fastq)
 
@@ -12,7 +14,7 @@ process longreadstats {
     script:
     """
     module load pythonlib
-    python3 long_read_qv.py -input ${fastq} -sample "${sample}.${tech}.${runid}" -output \${PWD}
+    python3 /g/data/xl04/ka6418/github/ausargassembly/workflows/bin/long_read_qv.py -input ${fastq} -sample "${sample}.${tech}.${runid}" -output \${PWD}
     """
 
     stub: 

@@ -1,5 +1,7 @@
 process shortreadstats {
 
+    publishDir "${params.rawdir}/${tech}/${runid}/fastx", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val (tech), val (runid), val (fastq)
 
@@ -14,8 +16,6 @@ process shortreadstats {
     def (r1, r2) = fastq.split(';')*.trim()
     
     """
-    module load fastqc
-
     fastqc -o \${PWD} -t ${task.cpus} -f fastq ${r1} ${r2}
     """
 
