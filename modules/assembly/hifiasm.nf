@@ -1,3 +1,4 @@
+
 process hifiasm {
 
   publishDir "${params.analysisdir}/${sample}/hifiasm", pattern : "*${sample}*", mode: 'copy', overwrite: true

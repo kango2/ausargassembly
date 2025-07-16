@@ -1,6 +1,6 @@
 process hifiasm {
 
-  publishDir "${params.outdir}", pattern : "*${sample}*", mode: 'copy', overwrite: true
+  publishDir "${params.analysisdir}/${sample}/hifiasm", pattern : "*${sample}*", mode: 'copy', overwrite: true
 
   input:
   tuple val(sample), val(meta)

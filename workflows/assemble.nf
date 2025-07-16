@@ -8,7 +8,7 @@ params.samplesheet = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembl
 params.analysisdir = "/g/data/xl04/genomeprojects"
 params.rawdir = "/g/data/xl04/bpadownload2025"
 
-include {hifiasm} from '/g/data/xl04/ka6418/github/ausargassembly/modules/assembly/hifiasm.nf'
+include {hifiasm} from '/g/data/xl04/ka6418/github/ausargassembly/modules/test/hifiasmtest.nf'
 include {shortreadtrimming} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/shortreadtrimming.nf'
 include {shortreadstats} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/shortreadstats.nf'
 include {kmerlongread; kmershortread} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/kmer.nf'
@@ -104,27 +104,31 @@ workflow {
     meta_ch
     .flatMap { sample, meta ->
       meta.collect { tech, runs ->
-        def files = runs*.file 
+        def files = runs*.file
+        // Limit Illumina to max 6 pairs
+        if (tech == 'illumina' && files.size() > 6) {
+          files = files.take(5)
+        }
         tuple(sample, tech, files)
       }
     }
     .set { sample_tech_files_ch }
 
     kmerlongreadch = kmerlongread(sample_tech_files_ch,kmermodes)
-    kmershortreadch = kmershortread(sample_tech_files_ch,kmermodes)
+    //kmershortreadch = kmershortread(sample_tech_files_ch,kmermodes)
 
-    hifiasmch = hifiasm(meta_ch)[0]
+    //hifiasmch = hifiasm(meta_ch)[0]
 
-    hifiasmch
-    .map { sample, meta_raw, primary, hap1, hap2 ->
-      def meta_asm = [
-      primary: primary,
-        hap1: hap1,
-        hap2: hap2
-      ]
-      tuple(sample, meta_raw, meta_asm)
-    }
-    .set { sample_meta_asm_ch }
+    //hifiasmch
+    //.map { sample, meta_raw, primary, hap1, hap2 ->
+    //  def meta_asm = [
+    //  primary: primary,
+    //    hap1: hap1,
+    //    hap2: hap2
+    //  ]
+    //  tuple(sample, meta_raw, meta_asm)
+    //}
+    //.set { sample_meta_asm_ch }
 
 
 }

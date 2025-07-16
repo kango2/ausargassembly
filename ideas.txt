@@ -1,0 +1,5 @@
+use params for each part of analysis as yes and no to selectively run things. lovely.
+
+module load statements will have to be moved inside statements if we want to take dvantage of nf queue upgrades and stuff
+
+current problems - capitalisation of PB, ONT, Illumina, HIC in output folders

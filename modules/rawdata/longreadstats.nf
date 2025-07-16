@@ -1,6 +1,6 @@
 process longreadstats {
 
-    publishDir "${params.rawdir}/${tech}/${runid}/fastx", pattern : "*.csv", mode: 'copy', overwrite: true
+    publishDir "${params.rawdir}/${sample}/${tech}/${runid}/fastx", pattern : "*.csv", mode: 'copy', overwrite: true
 
     input:
     tuple val (sample), val (tech), val (runid), val (fastq)

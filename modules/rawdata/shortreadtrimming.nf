@@ -2,7 +2,7 @@ process shortreadtrimming {
 
     errorStrategy 'ignore'
 
-    publishDir "${params.rawdir}/${tech}/${runid}/fastx", pattern : "*trimmed.fastq.gz", mode: 'copy', overwrite: true
+    publishDir "${params.rawdir}/${sample}/${tech}/${runid}/fastx", pattern : "*trimmed.fastq.gz", mode: 'copy', overwrite: true
 
     input:
     tuple val (sample), val (tech), val (runid), val (fastq)

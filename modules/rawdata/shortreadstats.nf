@@ -1,6 +1,6 @@
 process shortreadstats {
 
-    publishDir "${params.rawdir}/${tech}/${runid}/fastx", mode: 'copy', overwrite: true
+    publishDir "${params.rawdir}/${sample}/${tech}/${runid}/fastx", mode: 'copy', overwrite: true
 
     input:
     tuple val (sample), val (tech), val (runid), val (fastq)
