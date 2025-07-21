@@ -9,13 +9,12 @@
 #PBS -l wd
 #PBS -j oe 
 
-#usage qsub -v bam=,window=,outdir= 
+#usage qsub -v bam=,window=,outdir=,bambase= 
 
 module load samtools parallel
 set -ex
 
 export WINDOW=${window}
-bambase="$(basename ${bam} .bam)"
 
 samtools index -b -@ ${PBS_NCPUS} ${bam}
 # Create BED file

@@ -1,5 +1,7 @@
 process srf {
 
+    publishDir "${params.outdir}/srf", mode: 'copy', pattern : "*${sample}.${asmtype}.${assembler}*"
+
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)
 
@@ -9,16 +11,30 @@ process srf {
     script:
     
     """
+
+    inputfasta="${asmfasta}"
+    export inputfasta
+
+    sampleid="${sample}.${asmtype}.${assembler}"
+    export sampleid
+
+    OUTPUTDIR="\${PWD}"
+    export OUTPUTDIR
+    
+    klen=17
+    export klen
+
+    bash /g/data/xl04/ka6418/github/ausargassembly/workflows/bin/runsrf.sh
     
     """
 
     stub:
 
     """
-    touch "${sample}_${tech}_${assembler}_${asmtype}.asm2srf.abun"
-    touch "${sample}_${tech}_${assembler}_${asmtype}.asm2srf.bed"
-    touch "${sample}_${tech}_${assembler}_${asmtype}.asm2srf.paf"
-    touch "${sample}_${tech}_${assembler}_${asmtype}.srf.fa"
+    touch "${sample}_${assembler}_${asmtype}.asm2srf.abun"
+    touch "${sample}_${assembler}_${asmtype}.asm2srf.bed"
+    touch "${sample}_${assembler}_${asmtype}.asm2srf.paf"
+    touch "${sample}_${assembler}_${asmtype}.srf.fa"
     """
     
 }

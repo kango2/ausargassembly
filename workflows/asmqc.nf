@@ -1,4 +1,15 @@
 include {alignreads} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/alignreads.nf'
+include {bamdepth} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/bamdepth.nf'
+include {merqury} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/merqury.nf'
+include {inspector} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/inspector.nf'
+include {gaps} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/gaps.nf'
+include {busco} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/busco.nf'
+include {gc} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/gc.nf'
+include {asmtable} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/asmtable.nf'
+include {seqtable} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/seqtable.nf'
+include {srf} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/srf.nf'
+include {telomeres} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/telomeres.nf'
+include {univec} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/univec.nf'
 
 //STUB//
 //params.rawcsv = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg.csv"
@@ -91,68 +102,71 @@ workflow {
     return output
   }
   .set { alignreads_input_ch }
-
-  alignreads_input_ch.view()
    
   alignedreads = alignreads(alignreads_input_ch)[0]
+  depthch = bamdepth(alignedreads)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  alignedreads.map { sample, tech, assembler, asmtype, bam ->
-      tuple(sample, [tech: tech, assembler: assembler, asmtype: asmtype, bam: bam])
-    }
-    .groupTuple()
-    .set { grouped_bam_map }
 
   full_metadata_ch
-  .combine(grouped_bam_map)
-  .map { sample, meta, bam_entries ->
+    .flatMap { sample, meta ->
 
-    bam_entries.each { entry ->
-      def tech = entry.tech
-      def assembler = entry.assembler
-      def asmtype = entry.asmtype
-      def bam = entry.bam
+      def output = []
 
-      if (!meta.asm[assembler][asmtype].containsKey('alignment')) {
-        meta.asm[assembler][asmtype]['alignment'] = [:]
+      meta.asm.each { assembler, asmtypes_map ->
+
+        // only proceed if primary is defined
+        def primary = asmtypes_map.primary?.fasta
+        def h1 = asmtypes_map.hap1?.fasta
+        def h2 = asmtypes_map.hap2?.fasta
+
+        if (!primary) return []  // skip if no primary assembly
+
+        meta.raw.each { tech, runs ->
+          if (runs && runs.size() > 0) {
+            def reads = runs.collect { it.file }
+            output << tuple(sample, tech, assembler, reads, h1, h2)
+          }
+        }
       }
-      meta.asm[assembler][asmtype]['alignment'][tech] = bam
+
+      return output
+    }
+    .set {meta_with_hap_ch}
+  
+  kmer = [17,21,25]
+  merquryCh = merqury(meta_with_hap_ch,kmer)
+  inspectorCh = inspector(meta_with_hap_ch)
+
+
+  full_metadata_ch
+  .flatMap { sample, meta ->
+    def output = []
+
+    // Loop over each assembler
+    meta.asm.each { assembler, asmtypes_map ->
+
+      // Loop over each asmtype (e.g., primary, hap1, hap2)
+      asmtypes_map.each { asmtype, asmdata ->
+        def asmfasta = asmdata.fasta
+        output << tuple(sample, asmtype, assembler, asmfasta)
+      }
+
     }
 
-    tuple(sample, meta)
+    return output
   }
-  .set { enriched_metadata_ch }
+  .set { asmfasta_ch }
 
+  gaps(asmfasta_ch)
+  busco(asmfasta_ch)
+  gc(asmfasta_ch)
+  asmtable(asmfasta_ch)
+  seqtable(asmfasta_ch)
+  srf(asmfasta_ch)
+  telomeres(asmfasta_ch)
+  univec(asmfasta_ch)
+
+  
 
 
 }

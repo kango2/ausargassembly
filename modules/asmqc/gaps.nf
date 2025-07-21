@@ -1,5 +1,7 @@
 process gaps {
 
+    publishDir "${params.outdir}/gaps", mode: 'copy', pattern : "*gaps.bed"
+
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)
 
@@ -9,13 +11,14 @@ process gaps {
     script:
     
     """
+    python3 /g/data/xl04/ka6418/github/ausargassembly/workflows/bin/find_gaps.py -i ${asmfasta} -o \${PWD} -s ${sample}.${asmtype}.${assembler} -p ${task.cpus}
     
     """
 
     stub:
 
     """
-    touch "${sample}_${tech}_${assembler}_${asmtype}.gaps.bed"
+    touch "${sample}.${asmtype}.${assembler}.test_gaps.bed"
     """
 }
 

@@ -1,5 +1,7 @@
 process alignreads {
 
+    publishDir "${params.outdir}/alignreads", mode: 'copy', pattern : "*bam*"
+
     input:
     tuple val (sample), val (tech), val (asmtype), val (assembler), val (reads),  val (asmfasta)
 
@@ -12,48 +14,64 @@ process alignreads {
 
     script:
 
-    // add cases for when multiple files we cat 
-    //otherwise assume single file 
-    //reads is going to be a list. it will always have one file , or may have more
-    // [file1] or incase of illumina [R1;R2]
-    // if multiple files, reads is going to look like this [file1, file2] and illumina is going to look like [R1;R2, R1;R2]
-
     if (tech == "illumina") {
-        // handle R1;R2:R1;R2 format
-        def r1_files = []
-        def r2_files = []
-        reads.split(':').each { pair ->
+        def r1s = []
+        def r2s = []
+
+        for (pair in reads) {
             def (r1, r2) = pair.split(';')
-            r1_files << r1
-            r2_files << r2
+            r1s << r1
+            r2s << r2
         }
-        def r1s = r1_files.join(" ")
-        def r2s = r2_files.join(" ")
 
-    """
+            if (r1s.size() == 1) {
 
-    cat ${r1s} > ${sample}.${tech}.R1.merged.fastq.gz
-    cat ${r2s} > ${sample}.${tech}.R2.merged.fastq.gz
+                """
 
-    bwa-mem2 mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} ${sample}.${tech}.R1.merged.fastq.gz ${sample}.${tech}.R2.merged.fastq.gz | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
-     -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
+                bwa-mem2 mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} ${r1s[0]} ${r2s[0]} | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+                -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
 
-    
-    """
+                """
+            } else {
+
+            """
+
+                cat ${r1s.join(' ')} > ${sample}.${tech}.R1.merged.fastq.gz
+                cat ${r2s.join(' ')} > ${sample}.${tech}.R2.merged.fastq.gz
+
+                bwa-mem2 mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} ${sample}.${tech}.R1.merged.fastq.gz ${sample}.${tech}.R2.merged.fastq.gz | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+                -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
+
+            """
+
+
+            }
+
 
     }
 
     else if( tech == "ont" | tech == "pb" ) {
     
-    readlist = reads.split(':').join(' ')
     preset = (tech == "ont") ? "map-ont" : "map-hifi"
 
+    if (reads.size() == 1) {
+
+      """
+
+        minimap2 -Y -K 2000M -t "${task.cpus}" -ax ${preset} ${asmfasta} ${reads[0]} | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+     -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
+
+     """
+
+    }
+
+    else {
 
     """
 
     cat ${readlist} > ${sample}.${tech}.merged.fastq.gz
 
-    minimap2 -Y -K 2000M -t "${task.cpus}" -ax map-hifi ${asmfasta} ${sample}.${tech}.merged.fastq.gz | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+    minimap2 -Y -K 2000M -t "${task.cpus}" -ax ${preset} ${asmfasta} ${sample}.${tech}.merged.fastq.gz | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
      -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
 
     
@@ -61,6 +79,7 @@ process alignreads {
 
     }
 
+    }
 
     stub:
 
