@@ -1,13 +1,11 @@
-process contighicmap {
+process scaffoldhicmap {
 
     input:
-    tuple val (sample), val (asmtype), val (assembler), val (reads), val (fasta)
+    tuple val (sample), val (asmtype), val (assembler), val (fasta), val (bin), val (agp)
 
     output:
-    tuple val (sample), val (asmtype), val (assembler), val (reads), val (fasta), val ("*.hic"), val ("*.assembly")
+    tuple val (sample), val (asmtype), val (assembler), path ("*.hic"), path ("*.assembly")
 
-    when:
-    tech in ["hic"]
 
     script:
 
@@ -19,8 +17,8 @@ process contighicmap {
 
     """
 
-    touch ${sample}.${asmtype}.${assembler}.scaffolds.hic
-    touch ${sample}.${asmtype}.${assembler}.scaffolds.assembly
+    touch ${sample}.${asmtype}.${assembler}.hic
+    touch ${sample}.${asmtype}.${assembler}.assembly
     
     
     """

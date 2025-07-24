@@ -6,3 +6,5 @@ current problems - capitalisation of PB, ONT, Illumina, HIC in output folders
 
 how to cat 12 fastq's together and make it work.
 - seqkit concat, sort, pair ended
+
+use seqkit sort -lr and bwa index after hifiasm

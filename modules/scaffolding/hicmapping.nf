@@ -1,11 +1,11 @@
 process hicmapping {
 
     input:
-    tuple val (sample), val (asmtype), val (assembler), val (reads), val (fasta)
+    tuple val (sample), val (tech) ,val (assembler), val (asmtype),  val (reads), val (fasta)
 
     output:
-    tuple val (sample), val (asmtype), val (assembler), val (reads), val (fasta), val ("*.bam")
-    val ("*.bai")
+    tuple val (sample), val (asmtype), val (assembler), val (fasta), path ("*.bam")
+    path ("*.bai")
 
     when:
     tech in ["hic"]
