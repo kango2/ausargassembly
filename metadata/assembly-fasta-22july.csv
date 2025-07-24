@@ -1,0 +1,13 @@
+sample,assembler,asmtype,filetype,path
+LAMDEL,hifiasm,p,fasta,/g/data/xl04/genomeprojects/LAMDEL/hifiasm/LAMDEL.p_ctg.fasta
+LAMDEL,hifiasm,h1,fasta,/g/data/xl04/genomeprojects/LAMDEL/hifiasm/LAMDEL.hap1.p_ctg.fasta
+LAMDEL,hifiasm,h2,fasta,/g/data/xl04/genomeprojects/LAMDEL/hifiasm/LAMDEL.hap2.p_ctg.fasta
+PSEENT,hifiasm,p,fasta,/g/data/xl04/genomeprojects/PSEENT/hifiasm/PSEENT.p_ctg.fasta
+PSEENT,hifiasm,h1,fasta,/g/data/xl04/genomeprojects/PSEENT/hifiasm/PSEENT.hap1.p_ctg.fasta
+PSEENT,hifiasm,h2,fasta,/g/data/xl04/genomeprojects/PSEENT/hifiasm/PSEENT.hap2.p_ctg.fasta
+SAIEQU,hifiasm,p,fasta,/g/data/xl04/genomeprojects/SAIEQU/hifiasm/SAIEQU.p_ctg.fasta
+SAIEQU,hifiasm,h1,fasta,/g/data/xl04/genomeprojects/SAIEQU/hifiasm/SAIEQU.hap1.p_ctg.fasta
+SAIEQU,hifiasm,h2,fasta,/g/data/xl04/genomeprojects/SAIEQU/hifiasm/SAIEQU.hap2.p_ctg.fasta
+TILRUE,hifiasm,p,fasta,/g/data/xl04/genomeprojects/TILRUE/hifiasm/TILRUE.p_ctg.fasta
+TILRUE,hifiasm,h1,fasta,/g/data/xl04/genomeprojects/TILRUE/hifiasm/TILRUE.hap1.p_ctg.fasta
+TILRUE,hifiasm,h2,fasta,/g/data/xl04/genomeprojects/TILRUE/hifiasm/TILRUE.hap2.p_ctg.fasta

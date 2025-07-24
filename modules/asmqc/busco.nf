@@ -1,6 +1,6 @@
 process busco {
 
-    publishDir "${params.outdir}/alignreads", mode: 'copy', pattern : "*${sample}.${asmtype}.${assembler}*"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/busco/${asmtype}", mode: 'copy', pattern : "*${sample}.${asmtype}.${assembler}*"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)
@@ -33,9 +33,9 @@ process busco {
 
     """
     
-    touch "${sample}_${assembler}_${asmtype}.full_table.tsv"
-    touch "${sample}_${assembler}_${asmtype}.short_summary.json"
-    touch "${sample}_${assembler}_${asmtype}.missing_busco_list.tsv"
+    touch "${sample}.${assembler}.${asmtype}.full_table.tsv"
+    touch "${sample}.${assembler}.${asmtype}.short_summary.json"
+    touch "${sample}.${assembler}.${asmtype}.missing_busco_list.tsv"
 
     """
 }

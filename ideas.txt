@@ -3,3 +3,6 @@ use params for each part of analysis as yes and no to selectively run things. lo
 module load statements will have to be moved inside statements if we want to take dvantage of nf queue upgrades and stuff
 
 current problems - capitalisation of PB, ONT, Illumina, HIC in output folders
+
+how to cat 12 fastq's together and make it work.
+- seqkit concat, sort, pair ended

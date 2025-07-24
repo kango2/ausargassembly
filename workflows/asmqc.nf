@@ -17,8 +17,13 @@ include {univec} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/u
 //STUB//
 
 //SMALL TEST DATA - PB,ONT,ILLUMINA using PV2.1 assembly//
-params.rawcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/fastq.csv"
-params.asmcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/asm.csv"
+//params.rawcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/fastq.csv"
+//params.asmcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/asm.csv"
+//
+
+//PRODUCTION DATASET
+params.rawcsv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fastq-8july.csv"
+params.asmcsv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fasta-22july.csv"
 
 // ========== RAW DATA PARSER ========== //
 Channel
@@ -115,9 +120,9 @@ workflow {
       meta.asm.each { assembler, asmtypes_map ->
 
         // only proceed if primary is defined
-        def primary = asmtypes_map.primary?.fasta
-        def h1 = asmtypes_map.hap1?.fasta
-        def h2 = asmtypes_map.hap2?.fasta
+        def primary = asmtypes_map.p?.fasta
+        def h1 = asmtypes_map.h1?.fasta
+        def h2 = asmtypes_map.h2?.fasta
 
         if (!primary) return []  // skip if no primary assembly
 

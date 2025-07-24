@@ -1,6 +1,6 @@
 process gaps {
 
-    publishDir "${params.outdir}/gaps", mode: 'copy', pattern : "*gaps.bed"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/gaps/${asmtype}", mode: 'copy', pattern : "*gaps.bed"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)

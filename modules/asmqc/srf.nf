@@ -1,6 +1,6 @@
 process srf {
 
-    publishDir "${params.outdir}/srf", mode: 'copy', pattern : "*${sample}.${asmtype}.${assembler}*"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/srf/${asmtype}", mode: 'copy', pattern : "*${sample}.${asmtype}.${assembler}*"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)

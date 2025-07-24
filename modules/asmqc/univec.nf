@@ -1,6 +1,6 @@
 process univec {
 
-    publishDir "${params.outdir}/univec", mode: 'copy', pattern : "*univec.txt"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/univec/${asmtype}", mode: 'copy', pattern : "*univec.txt"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)
@@ -11,8 +11,6 @@ process univec {
     script:
     
     """
-    
-    module load blast/2.14.1
     db=/g/data/if89/datalib/UniVecDB/UniVecDB
     database="\$db"
 
@@ -24,7 +22,7 @@ process univec {
     stub:
 
     """
-    touch "${sample}_${assembler}_${asmtype}.univec.txt"
+    touch "${sample}.${assembler}.${asmtype}.univec.txt"
     """
 }
 

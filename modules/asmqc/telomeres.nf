@@ -1,6 +1,6 @@
 process telomeres {
 
-    publishDir "${params.outdir}/telomeres", mode: 'copy', pattern : "*${sample}.${asmtype}.${assembler}*"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/telomeres/${asmtype}", mode: 'copy', pattern : "*${sample}.${asmtype}.${assembler}*"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)

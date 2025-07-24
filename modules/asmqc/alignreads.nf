@@ -1,9 +1,9 @@
 process alignreads {
 
-    publishDir "${params.outdir}/alignreads", mode: 'copy', pattern : "*bam*"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/alignreads/${tech}/${asmtype}", mode: 'copy', pattern : "*bam*"
 
     input:
-    tuple val (sample), val (tech), val (asmtype), val (assembler), val (reads),  val (asmfasta)
+    tuple val (sample), val (tech), val (assembler), val (asmtype), val (reads),  val (asmfasta)
 
     output:
     tuple val (sample), val (tech), val (asmtype),  val (assembler), path("*.bam")
@@ -36,10 +36,10 @@ process alignreads {
 
             """
 
-                cat ${r1s.join(' ')} > ${sample}.${tech}.R1.merged.fastq.gz
-                cat ${r2s.join(' ')} > ${sample}.${tech}.R2.merged.fastq.gz
+                cat ${r1s.join(' ')} > "/iointensive/${sample}.${tech}.R1.merged.fastq.gz"
+                cat ${r2s.join(' ')} > "/iointensive/${sample}.${tech}.R2.merged.fastq.gz"
 
-                bwa-mem2 mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} ${sample}.${tech}.R1.merged.fastq.gz ${sample}.${tech}.R2.merged.fastq.gz | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+                bwa-mem2 mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} "/iointensive/${sample}.${tech}.R1.merged.fastq.gz" "/iointensive/${sample}.${tech}.R2.merged.fastq.gz" | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
                 -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
 
             """
@@ -69,9 +69,9 @@ process alignreads {
 
     """
 
-    cat ${readlist} > ${sample}.${tech}.merged.fastq.gz
+    cat ${reads.join(' ')} > "/iointensive/${sample}.${tech}.merged.fastq.gz"
 
-    minimap2 -Y -K 2000M -t "${task.cpus}" -ax ${preset} ${asmfasta} ${sample}.${tech}.merged.fastq.gz | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+    minimap2 -Y -K 2000M -t "${task.cpus}" -ax ${preset} ${asmfasta} "/iointensive/${sample}.${tech}.merged.fastq.gz" | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
      -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
 
     

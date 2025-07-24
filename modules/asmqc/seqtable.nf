@@ -1,6 +1,6 @@
 process seqtable {
 
-    publishDir "${params.outdir}/gaps", mode: 'copy', pattern : "*seqtable.csv"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/seqtable/${asmtype}", mode: 'copy', pattern : "*seqtable.csv"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)

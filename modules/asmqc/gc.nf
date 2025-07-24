@@ -1,6 +1,6 @@
 process gc {
 
-    publishDir "${params.outdir}/gaps", mode: 'copy', pattern : "*GC.bed"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/gc/${asmtype}", mode: 'copy', pattern : "*GC.bed"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)

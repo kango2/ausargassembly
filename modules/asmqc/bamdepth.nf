@@ -1,9 +1,9 @@
 process bamdepth {
 
-    publishDir "${params.outdir}/alignreads", mode: 'copy', pattern : "*depth.bed*"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/depth/${tech}/${asmtype}", mode: 'copy', pattern : "*depth.bed*"
 
     input:
-    tuple val (sample), val (tech), val (asmtype),  val (assembler), val (bam)
+    tuple val (sample), val (tech), val (assembler), val (asmtype),   val (bam)
 
     output:
     tuple val (sample), val (tech), val (asmtype),  val (assembler), path ("*.depth.bed")
@@ -32,8 +32,8 @@ process bamdepth {
 
     """
 
-    touch "${sample}_${tech}_${assembler}_${asmtype}.depth.bed"
-    
+    touch "${sample}.${tech}.${assembler}.${asmtype}.depth.bed"
+
     """
 
 }

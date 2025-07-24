@@ -1,6 +1,6 @@
 process asmtable {
 
-    publishDir "${params.outdir}/asmtable", mode: 'copy', pattern : "*asmtable.csv"
+    publishDir "${params.outdir}/${sample}/analysis/asmqc/${assembler}/asmtable/${asmtype}", mode: 'copy', pattern : "*asmtable.csv"
 
     input:
     tuple val (sample), val (asmtype), val (assembler), val (asmfasta)
