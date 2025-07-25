@@ -101,14 +101,16 @@ workflow {
   }
   .set { hic_mapping_ch }
 
+  hic_mapping_ch.view()
+
   contighicmapch = contighicmap(hic_mapping_ch)
   hicmappingch = hicmapping(hic_mapping_ch)[0]
   contigtoscaffoldch = contigtoscaffold(hicmappingch)
   scaffoldhicmapch = scaffoldhicmap(contigtoscaffoldch)
 
   contigtoscaffoldch
-  .map { sample, asmtype, assembler, fasta, bin, agp ->
-    def yahs_entry = [(asmtype): [fasta: fasta]]
+  .map { sample, asmtype, assembler, contigs, scaffolds, bin, agp ->
+    def yahs_entry = [(asmtype): [fasta: scaffolds]]
     tuple(sample, yahs_entry)
   }
   .groupTuple()
