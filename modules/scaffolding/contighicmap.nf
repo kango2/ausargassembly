@@ -18,11 +18,8 @@ process contighicmap {
     stub:
 
     """
-
     touch ${sample}.${asmtype}.${assembler}.hic
     touch ${sample}.${asmtype}.${assembler}.assembly
-    
-    
     """
 
 

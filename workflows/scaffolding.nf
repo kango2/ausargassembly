@@ -4,13 +4,13 @@ include {contigtoscaffold} from '/g/data/xl04/ka6418/github/ausargassembly/modul
 include {scaffoldhicmap} from '/g/data/xl04/ka6418/github/ausargassembly/modules/scaffolding/scaffoldhicmap.nf'
 
 //STUB//
-params.rawcsv = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg.csv"
-params.asmcsv = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg-assembly.csv"
+//params.rawcsv = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg.csv"
+//params.asmcsv = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg-assembly.csv"
 //STUB//
 
 //SMALL TEST DATA - PB,ONT,ILLUMINA using PV2.1 assembly//
-//params.rawcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/fastq.csv"
-//params.asmcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/asm.csv"
+params.rawcsv = "/g/data/xl04/ka6418/ausargassembly/testdata/hic/smallcontigdataset/raw.csv"
+params.asmcsv = "/g/data/xl04/ka6418/ausargassembly/testdata/hic/smallcontigdataset/asm.csv"
 //
 
 //PRODUCTION DATASET
@@ -72,6 +72,7 @@ meta_raw_ch
 
 
 workflow {
+
 
   full_metadata_ch
   .flatMap { sample, meta ->
@@ -157,18 +158,6 @@ workflow {
   }
   .set { alignreads_input_ch }
 
-  alignreads_input_ch.view()
 
-  
-
-
-  
-
-
-  
-
-
-  
-    
 }
 
