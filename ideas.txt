@@ -8,3 +8,5 @@ how to cat 12 fastq's together and make it work.
 - seqkit concat, sort, pair ended
 
 use seqkit sort -lr and bwa index after hifiasm
+
+need to add bwa index after yahs step.

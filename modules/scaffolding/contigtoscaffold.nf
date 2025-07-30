@@ -1,5 +1,7 @@
 process contigtoscaffold {
 
+    publishDir "${params.outdir}/${sample}/scaffolding/yahs", pattern : "*${sample}.${asmtype}*", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val (asmtype), val (assembler), val (fasta), val (hicmapping)
 

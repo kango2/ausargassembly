@@ -22,7 +22,7 @@ include {univec} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/u
 //
 
 //PRODUCTION DATASET
-params.rawcsv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fastq-8july.csv"
+params.rawcsv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fastq-29july-notiliqua-trimmedillumina.csv"
 params.asmcsv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fasta-22july.csv"
 
 // ========== RAW DATA PARSER ========== //
@@ -140,7 +140,7 @@ workflow {
   
   kmer = [17,21,25]
   merquryCh = merqury(meta_with_hap_ch,kmer)
-  inspectorCh = inspector(meta_with_hap_ch)
+  //inspectorCh = inspector(meta_with_hap_ch)
 
 
   full_metadata_ch
@@ -162,14 +162,14 @@ workflow {
   }
   .set { asmfasta_ch }
 
-  gaps(asmfasta_ch)
-  busco(asmfasta_ch)
-  gc(asmfasta_ch)
-  asmtable(asmfasta_ch)
-  seqtable(asmfasta_ch)
-  srf(asmfasta_ch)
-  telomeres(asmfasta_ch)
-  univec(asmfasta_ch)
+  //gaps(asmfasta_ch)
+  //busco(asmfasta_ch)
+  //gc(asmfasta_ch)
+  //asmtable(asmfasta_ch)
+  //seqtable(asmfasta_ch)
+  //srf(asmfasta_ch)
+  //telomeres(asmfasta_ch)
+  //univec(asmfasta_ch)
 
   
 

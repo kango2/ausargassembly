@@ -8,6 +8,7 @@ process hifiasm {
   output:
   tuple val(sample), val(meta), path("${sample}.p_ctg.fasta"), path("${sample}.hap1.p_ctg.fasta"), path("${sample}.hap2.p_ctg.fasta")
   tuple val(sample), val(meta), path("*.gfa")
+  tuple val(sample), val(meta), path("*${sample}*fasta*")
 
   script:
     // Flatten PB files
@@ -55,6 +56,8 @@ process hifiasm {
     hifiasm --telo-m CCCTAA -o ${sample} -t ${task.cpus} ${ontArg} ${hicArgs} ${pbArg}
     for hap in "" ".hap1" ".hap2"; do
         gfatools gfa2fa ${asmprefix}\${hap}.p_ctg.gfa > ${sample}\${hap}.p_ctg.fasta
+        bwa index ${sample}\${hap}.p_ctg.fasta
+        samtools faidx ${sample}\${hap}.p_ctg.fasta
     done
     """
     
@@ -104,7 +107,7 @@ process hifiasm {
 
     echo hifiasm --telo-m CCCTAA -o ${sample} -t ${task.cpus} ${ontArg} ${hicArgs} ${pbArg} 
     for hap in "" ".hap1" ".hap2"; do
-        echo gfatools gfa2fa ${asmprefix}\${hap}.p_ctg.gfa
+        echo gfatools gfa2fa ${asmprefix}\${hap}.p_ctg.gfa 
     done
     touch ${sample}.p_ctg.fasta ${sample}.hap1.p_ctg.fasta ${sample}.hap2.p_ctg.fasta
     touch ${sample}.p_ctg.gfa ${sample}.hap1.gfa ${sample}.hap2.gfa

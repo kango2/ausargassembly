@@ -14,8 +14,14 @@ process inspector {
     script:
     
     """
-
-    cat ${h1asm} ${h2asm} > \${PBS_JOBFS}/${sample}.${assembler}.diploid.fasta
+    
+    if [[ ${assembler} == "yahs" ]]; then
+        sed 's/^>/>h1_/' ${h1asm} > \${PBS_JOBFS}/h1.tmp.fasta
+        sed 's/^>/>h2_/' ${h2asm} > \${PBS_JOBFS}/h2.tmp.fasta
+        cat \${PBS_JOBFS}/h1.tmp.fasta \${PBS_JOBFS}/h2.tmp.fasta > \${PBS_JOBFS}/${sample}.${assembler}.diploid.fasta
+    else
+        cat ${h1asm} ${h2asm} > \${PBS_JOBFS}/${sample}.${assembler}.diploid.fasta
+    fi
     inspector -t ${task.cpus} -c \${PBS_JOBFS}/${sample}.${assembler}.diploid.fasta -r ${reads.join(' ')} -o ${sample}.${tech}.${assembler} --datatype hifi
 
     mv ${sample}.${tech}.${assembler}/summary_statistics ${sample}.${tech}.${assembler}.summary_statistics.txt

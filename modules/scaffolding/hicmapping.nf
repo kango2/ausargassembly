@@ -1,5 +1,7 @@
 process hicmapping {
 
+    publishDir "${params.outdir}/${sample}/scaffolding/scaffoldtohicalign", pattern : "*${sample}.${asmtype}.${assembler}*", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val (tech) ,val (assembler), val (asmtype),  val (reads), val (fasta)
 

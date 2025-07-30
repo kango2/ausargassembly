@@ -1,5 +1,7 @@
 process contighicmap {
 
+    publishDir "${params.outdir}/${sample}/scaffolding/contighicmap", pattern : "*${sample}.${asmtype}.${assembler}*", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val(tech) , val (assembler), val (asmtype),  val (reads), val (fasta)
 
@@ -39,8 +41,8 @@ process contighicmap {
     stub:
 
     """
-    touch ${sample}.${asmtype}.${assembler}.hic
-    touch ${sample}.${asmtype}.${assembler}.assembly
+    touch ${sample}.${asmtype}.${assembler}.test.hic
+    touch ${sample}.${asmtype}.${assembler}.test.assembly
     """
 
 

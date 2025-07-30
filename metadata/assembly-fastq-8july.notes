@@ -1,0 +1,9 @@
+problematic sample, this is saiphos
+TILRUE,illumina,350852_S12_L004,/g/data/xl04/bpadownload2025/TILRUE/illumina/350852_S12_L004/fastx/350852_AusARG_UNSW_HJTCJDSX3_GAATTACAAG-ACCGGCTCAG_S12_L004_R1_001.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350852_S12_L004/fastx/350852_AusARG_UNSW_HJTCJDSX3_GAATTACAAG-ACCGGCTCAG_S12_L004_R2_001.fastq.gz
+
+
+problematic sample, this is actually tiliqua illumina
+TILRUE,hic,350781_S6_L002,/g/data/xl04/bpadownload2025/TILRUE/hic/350781_S6_L002/fastx/350781_AusARG_BRF_HCN7WDRXY_S6_L002_R1_001.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/hic/350781_S6_L002/fastx/350781_AusARG_BRF_HCN7WDRXY_S6_L002_R2_001.fastq.gz
+
+
+there is one tiliqua illumina sample missing

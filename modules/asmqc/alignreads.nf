@@ -6,7 +6,7 @@ process alignreads {
     tuple val (sample), val (tech), val (assembler), val (asmtype), val (reads),  val (asmfasta)
 
     output:
-    tuple val (sample), val (tech), val (asmtype),  val (assembler), path("*.bam")
+    tuple val (sample), val (tech),val (assembler), val (asmtype),  path("*.bam")
     path ("*.bai")
 
     when:
@@ -28,7 +28,7 @@ process alignreads {
 
                 """
 
-                bwa-mem2 mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} ${r1s[0]} ${r2s[0]} | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+                bwa mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} ${r1s[0]} ${r2s[0]} | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
                 -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
 
                 """
@@ -39,7 +39,7 @@ process alignreads {
                 cat ${r1s.join(' ')} > "/iointensive/${sample}.${tech}.R1.merged.fastq.gz"
                 cat ${r2s.join(' ')} > "/iointensive/${sample}.${tech}.R2.merged.fastq.gz"
 
-                bwa-mem2 mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} "/iointensive/${sample}.${tech}.R1.merged.fastq.gz" "/iointensive/${sample}.${tech}.R2.merged.fastq.gz" | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
+                bwa mem -t "${task.cpus}" -Y -K 100000000 ${asmfasta} "/iointensive/${sample}.${tech}.R1.merged.fastq.gz" "/iointensive/${sample}.${tech}.R2.merged.fastq.gz" | samtools sort - --reference ${asmfasta} -T \${PBS_JOBFS} -@ "${task.cpus}" --write-index --output-fmt BAM \
                 -o "${sample}.${tech}.${assembler}.${asmtype}.bam"##idx##"${sample}.${tech}.${assembler}.${asmtype}.bam.bai"
 
             """

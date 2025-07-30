@@ -33,9 +33,9 @@ process busco {
 
     """
     
-    touch "${sample}.${assembler}.${asmtype}.full_table.tsv"
-    touch "${sample}.${assembler}.${asmtype}.short_summary.json"
-    touch "${sample}.${assembler}.${asmtype}.missing_busco_list.tsv"
+    touch "${sample}.${asmtype}.${assembler}.full_table.tsv"
+    touch "${sample}.${asmtype}.${assembler}.short_summary.json"
+    touch "${sample}.${asmtype}.${assembler}.missing_busco_list.tsv"
 
     """
 }

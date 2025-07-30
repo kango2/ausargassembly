@@ -4,7 +4,7 @@
 //params.samplesheet = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg-noillumina.csv"
 
 //real data
-params.samplesheet = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-8july.csv"
+params.samplesheet = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fixed-tiliqua-fastq-29july-tiliqua.csv"
 params.analysisdir = "/g/data/xl04/genomeprojects"
 params.rawdir = "/g/data/xl04/bpadownload2025"
 
@@ -115,20 +115,20 @@ workflow {
     .set { sample_tech_files_ch }
 
     kmerlongreadch = kmerlongread(sample_tech_files_ch,kmermodes)
-    //kmershortreadch = kmershortread(sample_tech_files_ch,kmermodes)
+    kmershortreadch = kmershortread(sample_tech_files_ch,kmermodes)
 
-    //hifiasmch = hifiasm(meta_ch)[0]
+    hifiasmch = hifiasm(meta_ch)[0]
 
-    //hifiasmch
-    //.map { sample, meta_raw, primary, hap1, hap2 ->
-    //  def meta_asm = [
-    //  primary: primary,
-    //    hap1: hap1,
-    //    hap2: hap2
-    //  ]
-    //  tuple(sample, meta_raw, meta_asm)
-    //}
-    //.set { sample_meta_asm_ch }
+    hifiasmch
+    .map { sample, meta_raw, primary, hap1, hap2 ->
+      def meta_asm = [
+      primary: primary,
+        hap1: hap1,
+        hap2: hap2
+      ]
+      tuple(sample, meta_raw, meta_asm)
+    }
+    .set { sample_meta_asm_ch }
 
 
 }

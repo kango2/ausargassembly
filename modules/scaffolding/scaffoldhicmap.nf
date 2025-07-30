@@ -1,5 +1,7 @@
 process scaffoldhicmap {
 
+    publishDir "${params.outdir}/${sample}/scaffolding/scaffoldhicmap", pattern : "*${sample}.${asmtype}.${assembler}*", mode: 'copy', overwrite: true
+
     input:
     tuple val (sample), val (asmtype), val (assembler), val (contigs), val (scaffolds), val (bin), val (agp)
 

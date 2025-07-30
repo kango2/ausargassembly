@@ -45,7 +45,7 @@ process kmerlongread {
 
 process kmershortread {
 
-    publishDir "${params.rawdir}/${tech}/kmercount", pattern : "*.histo", mode: 'copy', overwrite: true
+    publishDir "${params.rawdir}/${sample}/${tech}/kmercount", pattern : "*.histo", mode: 'copy', overwrite: true
 
     input:
     tuple val (sample), val (tech), val (fastq)
