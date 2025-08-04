@@ -1,0 +1,17 @@
+sample,tech,runid,file
+TILRUE,illumina,350743_S1_L001,/g/data/xl04/bpadownload2025/TILRUE/illumina/350743_S1_L001/fastx/TILRUE.350743_S1_L001.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350743_S1_L001/fastx/TILRUE.350743_S1_L001.R2.trimmed.fastq.gz
+TILRUE,illumina,350743_S1_L002,/g/data/xl04/bpadownload2025/TILRUE/illumina/350743_S1_L002/fastx/TILRUE.350743_S1_L002.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350743_S1_L002/fastx/TILRUE.350743_S1_L002.R2.trimmed.fastq.gz
+TILRUE,illumina,350744_S4_L001,/g/data/xl04/bpadownload2025/TILRUE/illumina/350744_S4_L001/fastx/TILRUE.350744_S4_L001.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350744_S4_L001/fastx/TILRUE.350744_S4_L001.R2.trimmed.fastq.gz
+TILRUE,illumina,350744_S4_L002,/g/data/xl04/bpadownload2025/TILRUE/illumina/350744_S4_L002/fastx/TILRUE.350744_S4_L002.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350744_S4_L002/fastx/TILRUE.350744_S4_L002.R2.trimmed.fastq.gz
+TILRUE,illumina,350745_S5_L001,/g/data/xl04/bpadownload2025/TILRUE/illumina/350745_S5_L001/fastx/TILRUE.350745_S5_L001.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350745_S5_L001/fastx/TILRUE.350745_S5_L001.R2.trimmed.fastq.gz
+TILRUE,illumina,350745_S5_L002,/g/data/xl04/bpadownload2025/TILRUE/illumina/350745_S5_L002/fastx/TILRUE.350745_S5_L002.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350745_S5_L002/fastx/TILRUE.350745_S5_L002.R2.trimmed.fastq.gz
+TILRUE,illumina,350746_S3_L001,/g/data/xl04/bpadownload2025/TILRUE/illumina/350746_S3_L001/fastx/TILRUE.350746_S3_L001.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350746_S3_L001/fastx/TILRUE.350746_S3_L001.R2.trimmed.fastq.gz
+TILRUE,illumina,350746_S3_L002,/g/data/xl04/bpadownload2025/TILRUE/illumina/350746_S3_L002/fastx/TILRUE.350746_S3_L002.R1.trimmed.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/illumina/350746_S3_L002/fastx/TILRUE.350746_S3_L002.R2.trimmed.fastq.gz
+TILRUE,hic,350781_HCN7WDRXY_S6_L002,/g/data/xl04/bpadownload2025/TILRUE/hic/350781_HCN7WDRXY_S6_L002/fastx/350781_AusARG_BRF_HCN7WDRXY_S6_L002_R1_001.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/hic/350781_HCN7WDRXY_S6_L002/fastx/350781_AusARG_BRF_HCN7WDRXY_S6_L002_R2_001.fastq.gz
+TILRUE,hic,350781_DD2M2_S6_L001,/g/data/xl04/bpadownload2025/TILRUE/hic/350781_DD2M2_S6_L001/fastx/350781_AusARG_BRF_DD2M2_CTTGTA_S6_L001_R1_001.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/hic/350781_DD2M2_S6_L001/fastx/350781_AusARG_BRF_DD2M2_CTTGTA_S6_L001_R2_001.fastq.gz
+TILRUE,hic,350781_HCN7WDRXY_S6_L001,/g/data/xl04/bpadownload2025/TILRUE/hic/350781_HCN7WDRXY_S6_L001/fastx/350781_AusARG_BRF_HCN7WDRXY_S6_L001_R1_001.fastq.gz;/g/data/xl04/bpadownload2025/TILRUE/hic/350781_HCN7WDRXY_S6_L001/fastx/350781_AusARG_BRF_HCN7WDRXY_S6_L001_R2_001.fastq.gz
+TILRUE,ont,PAF14945,/g/data/xl04/bpadownload2025/TILRUE/ont/PAF14945/fastx/TILRUE.ONT.PAF14945_pass.fastq.gz
+TILRUE,ont,PAF17817,/g/data/xl04/bpadownload2025/TILRUE/ont/PAF17817/fastx/TILRUE.ONT.PAF17817_pass.fastq.gz
+TILRUE,ont,PAG18329,/g/data/xl04/bpadownload2025/TILRUE/ont/PAG18329/fastx/TILRUE.ONT.PAG18329_pass.fastq.gz
+TILRUE,pb,DA052894,/g/data/xl04/bpadownload2025/TILRUE/pb/DA052894/fastx/TILRUE.PB.DA052894.deepconsensus.trimmed.fastq.gz
+TILRUE,pb,DA052873,/g/data/xl04/bpadownload2025/TILRUE/pb/DA052873/fastx/TILRUE.PB.DA052873.deepconsensus.trimmed.fastq.gz

@@ -1,7 +1,7 @@
 import csv
 import os
 
-input_csv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fastq-29july-notiliqua-trimmedillumina.csv"
+input_csv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fixed-tiliqua-fastq-29july-tiliqua.csv"
 
 missing = []
 

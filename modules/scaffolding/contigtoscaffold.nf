@@ -7,7 +7,7 @@ process contigtoscaffold {
 
     output:
     tuple val (sample), val (asmtype), val ("yahs"), val (fasta), path ("${sample}.${asmtype}.yahs.fasta"), path ("${sample}.${asmtype}.yahs.bin"), path ("${sample}.${asmtype}.yahs.agp")
-
+    path ("*${sample}.${asmtype}*")
     script:
 
     """
@@ -19,6 +19,8 @@ process contigtoscaffold {
     mv \${PBS_JOBFS}/${sample}.${asmtype}.yahs_scaffolds_final.fa ${sample}.${asmtype}.yahs.fasta
     mv \${PBS_JOBFS}/${sample}.${asmtype}.yahs_scaffolds_final.agp ${sample}.${asmtype}.yahs.agp
     mv \${PBS_JOBFS}/${sample}.${asmtype}.yahs.bin ${sample}.${asmtype}.yahs.bin
+
+    bwa index ${sample}.${asmtype}.yahs.fasta
     """
 
     stub:

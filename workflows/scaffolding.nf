@@ -114,9 +114,9 @@ workflow {
   .set { hic_mapping_ch }
 
 
-  //contighicmapch = contighicmap(hic_mapping_ch)
+  contighicmapch = contighicmap(hic_mapping_ch)
   hicmappingch = hicmapping(hic_mapping_ch)[0]
-  contigtoscaffoldch = contigtoscaffold(hicmappingch)
+  contigtoscaffoldch = contigtoscaffold(hicmappingch)[0]
   scaffoldhicmapch = scaffoldhicmap(contigtoscaffoldch)
 
   contigtoscaffoldch
