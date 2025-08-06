@@ -202,7 +202,7 @@ workflow {
 
   kmer = [17,21,25]
   merquryCh = merqury_scaf(meta_with_hap_ch,kmer)
-  inspectorCh = inspector_scaf(meta_with_hap_ch)
+  //inspectorCh = inspector_scaf(meta_with_hap_ch)
 
   updated_full_metadata_ch
   .flatMap { sample, meta ->
@@ -224,14 +224,14 @@ workflow {
   }
   .set { asmfasta_ch }
 
-  gaps_scaf(asmfasta_ch)
-  busco_scaf(asmfasta_ch)
-  gc_scaf(asmfasta_ch)
-  asmtable_scaf(asmfasta_ch)
-  seqtable_scaf(asmfasta_ch)
-  srf_scaf(asmfasta_ch)
-  telomeres_scaf(asmfasta_ch)
-  univec_scaf(asmfasta_ch)
+  //gaps_scaf(asmfasta_ch)
+  //busco_scaf(asmfasta_ch)
+  //gc_scaf(asmfasta_ch)
+  //asmtable_scaf(asmfasta_ch)
+  //seqtable_scaf(asmfasta_ch)
+  //srf_scaf(asmfasta_ch)
+  //telomeres_scaf(asmfasta_ch)
+  //univec_scaf(asmfasta_ch)
 
 }
 
