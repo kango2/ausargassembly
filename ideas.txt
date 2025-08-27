@@ -10,3 +10,6 @@ how to cat 12 fastq's together and make it work.
 use seqkit sort -lr and bwa index after hifiasm
 
 need to add bwa index after yahs step.
+
+IMPORTANT 
+- handle the step where the pogona failed. when not using hic, there will be "bp" in the final hifiasm output names

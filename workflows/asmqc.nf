@@ -11,19 +11,8 @@ include {srf} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/srf.
 include {telomeres} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/telomeres.nf'
 include {univec} from '/g/data/xl04/ka6418/github/ausargassembly/modules/asmqc/univec.nf'
 
-//STUB//
-//params.rawcsv = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg.csv"
-//params.asmcsv = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg-assembly.csv"
-//STUB//
 
-//SMALL TEST DATA - PB,ONT,ILLUMINA using PV2.1 assembly//
-//params.rawcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/fastq.csv"
-//params.asmcsv = "/g/data/xl04/ka6418/testing/tempjobfs/testpack-readsandasm/asm.csv"
-//
 
-//PRODUCTION DATASET
-params.rawcsv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fastq-29july-notiliqua-trimmedillumina.csv"
-params.asmcsv = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fasta-22july.csv"
 
 // ========== RAW DATA PARSER ========== //
 Channel
@@ -140,7 +129,7 @@ workflow {
   
   kmer = [17,21,25]
   merquryCh = merqury(meta_with_hap_ch,kmer)
-  //inspectorCh = inspector(meta_with_hap_ch)
+  inspectorCh = inspector(meta_with_hap_ch)
 
 
   full_metadata_ch
@@ -162,14 +151,14 @@ workflow {
   }
   .set { asmfasta_ch }
 
-  //gaps(asmfasta_ch)
-  //busco(asmfasta_ch)
-  //gc(asmfasta_ch)
-  //asmtable(asmfasta_ch)
-  //seqtable(asmfasta_ch)
-  //srf(asmfasta_ch)
-  //telomeres(asmfasta_ch)
-  //univec(asmfasta_ch)
+  gaps(asmfasta_ch)
+  busco(asmfasta_ch)
+  gc(asmfasta_ch)
+  asmtable(asmfasta_ch)
+  seqtable(asmfasta_ch)
+  srf(asmfasta_ch)
+  telomeres(asmfasta_ch)
+  univec(asmfasta_ch)
 
   
 

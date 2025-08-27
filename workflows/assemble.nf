@@ -1,12 +1,4 @@
-//stub file with illumina
-//params.samplesheet = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg.csv" 
-//stub file without illumina
-//params.samplesheet = "/g/data/xl04/ka6418/ausargassembly/assemblydev/sampledataausarg-noillumina.csv"
-
-//real data
-params.samplesheet = "/g/data/xl04/ka6418/github/ausargassembly/metadata/assembly-fixed-tiliqua-fastq-29july-tiliqua-withouttrim.csv"
-params.analysisdir = "/g/data/xl04/genomeprojects"
-params.rawdir = "/g/data/xl04/bpadownload2025"
+//params to pass : samplesheet,analysisdir,rawdir 
 
 include {hifiasm} from '/g/data/xl04/ka6418/github/ausargassembly/modules/test/hifiasmtest.nf'
 include {shortreadtrimming} from '/g/data/xl04/ka6418/github/ausargassembly/modules/rawdata/shortreadtrimming.nf'
@@ -60,6 +52,8 @@ workflow {
     }
     .set { flattened_meta_ch_temp }
 
+    flattened_meta_ch_temp.view()
+
     flattened_meta_illumina_ch = flattened_meta_ch_temp.filter { sample, tech, runid, file ->
     tech == 'illumina'
     }
@@ -99,7 +93,7 @@ workflow {
     .set { flattened_meta_ch }
 
     shortstatsch = shortreadstats(flattened_meta_ch)
-    //longstatsch = longreadstats(flattened_meta_ch)
+    longstatsch = longreadstats(flattened_meta_ch)
 
     meta_ch
     .flatMap { sample, meta ->
@@ -114,21 +108,21 @@ workflow {
     }
     .set { sample_tech_files_ch }
 
-    //kmerlongreadch = kmerlongread(sample_tech_files_ch,kmermodes)
+    kmerlongreadch = kmerlongread(sample_tech_files_ch,kmermodes)
     kmershortreadch = kmershortread(sample_tech_files_ch,kmermodes)
 
-    //hifiasmch = hifiasm(meta_ch)[0]
+    hifiasmch = hifiasm(meta_ch)[0]
 
-    //hifiasmch
-    //.map { sample, meta_raw, primary, hap1, hap2 ->
-    //  def meta_asm = [
-    //  primary: primary,
-    //    hap1: hap1,
-    //    hap2: hap2
-    //  ]
-    //  tuple(sample, meta_raw, meta_asm)
-    //}
-    //.set { sample_meta_asm_ch }
+    hifiasmch
+    .map { sample, meta_raw, primary, hap1, hap2 ->
+      def meta_asm = [
+      primary: primary,
+        hap1: hap1,
+        hap2: hap2
+      ]
+      tuple(sample, meta_raw, meta_asm)
+    }
+    .set { sample_meta_asm_ch }
 
 
 }
