@@ -23,7 +23,7 @@ samtools view -H ${bam} | perl -lne 'if ($_=~/SN:(\S+)\tLN:(\d+)/){ $c=$1;$l=$2;
 # Function to calculate depth for each BED region
 calculate_depth() {
     region=$1
-    samtools bedcov <(echo "$region") ${bam} | awk -v window=${WINDOW} '{print $1, $2, $3, $4/window}'
+    samtools bedcov <(echo "$region") ${bam} | awk '{print $1, $2, $3, $4/($3-$2)}'
 }
 
 export -f calculate_depth
